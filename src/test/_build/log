@@ -14,4 +14,10 @@
 #  ; build_dir = In_build_dir "default"
 #  ; instrument_with = []
 #  }
-$ /home/chloe/.opam/5.3.0/bin/ocamlc.opt -config > /tmp/dune_69b441_output
+$ /home/chloe/.opam/5.3.0/bin/ocamlc.opt -config > /tmp/dune_693233_output
+$ (cd _build/default && .ppx/68002d3c518370d47944501c7678b119/ppx.exe --cookie 'inline_tests="enabled"' --cookie 'library-name="geometryTest"' -o geometryTest.pp.ml --impl geometryTest.ml -corrected-suffix .ppx-corrected -diff-cmd - -dump-ast)
+> File "geometryTest.ml", line 68, characters 27-28:
+> 68 |   approx_vec ((6.,8.) (V.//) 2.) (3.,4.)
+>                                 ^
+> Error: Syntax error
+[1]

@@ -1,4 +1,4 @@
-open Geometry
+open Geometry;
 
 (*TODO : changer le nom du module*)
 module V : Vector = VectorImpl
@@ -19,56 +19,56 @@ let approx_vec ((x1,y1) : V.t) ((x2,y2) : V.t) =
 (* Tests (++ , --)*)
 
 (* addition : cas simple *)
-let%test =
+let%test _ =
   approx_vec ((1.,2.) V.++ (3.,4.)) (4.,6.)
 
 (* addition : avec négatifs *)
-let%test =
+let%test _ =
   approx_vec ((-1.,2.) V.++ (3.,-4.)) (2.,-2.)
 
 (* soustraction : cas simple *)
-let%test =
+let%test _ =
   approx_vec ((5.,7.) V.-- (2.,3.)) (3.,4.)
 
 (* soustraction : avec négatifs *)
-let%test =
+let%test _ =
   approx_vec ((-1.,2.) V.-- (3.,-4.)) (-4.,6.)
 
 
 (*  Tests produit scalaire*)
 
-let%test =
-  approx ((1.,0.) V.*. (0.,1.)) 0.
+let%test _ =
+  approx ((1.,0.) V.**. (0.,1.)) 0.
 
-let%test =
-  approx ((2.,3.) V.*. (4.,5.)) 23.
+let%test _ =
+  approx ((2.,3.) V.**. (4.,5.)) 23.
 
 (* avec négatifs *)
-let%test =
-  approx ((-2.,3.) V.*. (4.,-5.)) (-23.)
+let%test _ =
+  approx ((-2.,3.) V.**. (4.,-5.)) (-23.)
 
 
-(* Tests scalaire * vecteur (**) *)
+(* Tests scalaire * vecteur (***) *)
 
-let%test =
-  approx_vec (2. V.** (3.,4.)) (6.,8.)
+let%test _ =
+  approx_vec (2. V.*** (3.,4.)) (6.,8.)
 
 (* scalaire négatif *)
-let%test =
+let%test _ =
   approx_vec ((-2.) V.** (3.,4.)) (-6.,-8.)
 
 (* scalaire zéro *)
-let%test =
+let%test _ =
   approx_vec (0. V.** (3.,4.)) (0.,0.)
 
 
 (* Tests division d'un vecteur par un float (//)*)
 
-let%test =
-  approx_vec ((6.,8.) V.// 2.) (3.,4.)
+let%test _ =
+  approx_vec ((6.,8.) (V.//) 2.) (3.,4.)
 
 (* division avec négatifs *)
-let%test =
+let%test _ =
   approx_vec ((-6.,8.) V.// 2.) (-3.,4.)
 
 (*TODO*)
@@ -77,125 +77,125 @@ let%test =
 
 (* Tests length *)
 
-let%test =
+let%test _ =
   approx (V.length (3.,4.)) 5.
 
 (* vecteur nul *)
-let%test =
+let%test _ =
   approx (V.length (0.,0.)) 0.
 
 (* longueur avec négatifs : length(-3, -4) = 5 *)
-let%test =
+let%test _ =
   approx (V.length (-3.,-4.)) 5.
 
 
 (* Tests normalize*)
 
-let%test =
+let%test _ =
   approx_vec (V.normalize (2.,0.)) (1.,0.)
 
-let%test =
+let%test _ =
   approx_vec (V.normalize (0.,2.)) (0.,1.)
 
-let%test =
+let%test _ =
   approx_vec (V.normalize (0.,0.)) (0.,0.)
 
-let%test =
+let%test _ =
   approx_vec (V.normalize (3.,4.)) (0.6, 0.8)
 
 
 (* Tests rotate*)
 
-let%test =
+let%test _ =
   approx_vec (V.rotate (3.,4.) 0.) (3.,4.)
 
-let%test =
+let%test _ =
   approx_vec (V.rotate (1.,0.) (Float.pi /. 2.)) (0.,1.)
 
-let%test =
+let%test _ =
   approx_vec (V.rotate (1.,0.) Float.pi) (-1.,0.)
 
-let%test =
+let%test _ =
   approx_vec (V.rotate (1.,0.) (2. *. Float.pi)) (1.,0.)
 
 
 (* Tests angle *)
 
-let%test =
+let%test _ =
   approx (V.angle (1.,0.)) 0.
 
-let%test =
+let%test _ =
   approx (V.angle (0.,1.)) (Float.pi /. 2.)
 
-let%test =
+let%test _ =
   approx (V.angle (-1.,0)) Float.pi
 
-let%test =
+let%test _ =
   approx (V.angle (0.,-1.)) (-.Float.pi /. 2.)
 
 (* vecteur nul *)
-let%test =
+let%test _ =
   approx (V.angle (0.,0.)) 0.
 
 
 (* Tests project *)
 
 (* projection sur x *)
-let%test =
+let%test _ =
   approx_vec (V.project (3.,4.) (1.,0.)) (3.,0.)
 
 (* projection sur y *)
-let%test =
+let%test _ =
   approx_vec (V.project (3.,4.) (0.,1.)) (0.,4.)
 
-let%test =
+let%test _ =
   approx_vec (V.project (3.,4.) (2.,0.)) (3.,0.)
 
-let%test =
+let%test _ =
   approx_vec (V.project (3.,4.) (0.,2.)) (0.,4.)
 
 (* projection sur axe nul *)
-let%test =
+let%test _ =
   approx_vec (V.project (3.,4.) (0.,0.)) (0.,0.)
 
 (* projection d'un vecteur déjà sur l'axe x :*)
-let%test =
+let%test _ =
   approx_vec (V.project (5.,0.) (1.,0.)) (5.,0.)
 
 
 (*Tests symetric *)
 
 (* par rapport à l'axe x *)
-let%test =
+let%test _ =
   approx_vec (V.symetric (3.,4.) (1.,0.)) (3.,-4.)
 
 (* par rapport à l'axe y *)
-let%test =
+let%test _ =
   approx_vec (V.symetric (3.,4.) (0.,1.)) (-3.,4.)
 
-let%test =
+let%test _ =
   approx_vec (V.symetric (3.,4.) (2.,0.)) (3.,-4.)
 
-let%test =
+let%test _ =
   approx_vec (V.symetric (3.,4.) (0.,2.)) (-3.,4.)
 
 (* axe nul *)
-let%test =
+let%test _ =
   approx_vec (V.symetric (3.,4.) (0.,0.)) (3.,4.)
 
-let%test =
+let%test _ =
   approx_vec (V.symetric (5.,0.) (1.,0.)) (5.,0.)
 
 
 (* Tests ortho*)
 
-let%test =
+let%test _ =
   approx_vec (V.ortho (3.,4.)) (-4.,3.)
 
 (* cas simple *)
-let%test =
+let%test _ =
   approx_vec (V.ortho (1.,0.)) (0.,1.)
 
 (* vecteur nul *)
-let%test =
+let%test _ =
   approx_vec (V.ortho (0.,0.)) (0.,0.)
