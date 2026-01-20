@@ -1,0 +1,18 @@
+(lang dune 3.00)
+
+(name arkanoid)
+
+(source
+ (github 30Alexis01/Projet_PF_Casse-brique))
+
+(authors
+ "Chloe Boireau-Devier"
+ "Louis Chouane"
+ "Vadim Colin"
+ "Alexis Dieu")
+
+(package
+ (name arkanoid)
+ (depends ocaml))
+
+; See the complete stanza docs at https://dune.readthedocs.io/en/stable/reference/dune-project/index.html
