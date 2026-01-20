@@ -15,162 +15,187 @@ let approx a b =
 let approx_vec ((x1,y1) : V.t) ((x2,y2) : V.t) =
   approx x1 x2 && approx y1 y2
 
-(* Petit helper "élève" pour que les assert soient lisibles *)
-let assert_float valeur_calculee valeur_attendue =
-  assert (approx valeur_calculee valeur_attendue)
 
-let assert_vec valeur_calculee valeur_attendue =
-  assert (approx_vec valeur_calculee valeur_attendue)
+(* Tests (++ , --)*)
 
-let () =
+(* addition : cas simple *)
+let%test =
+  approx_vec ((1.,2.) V.++ (3.,4.)) (4.,6.)
 
-  (* Tests (++ , --)*)
+(* addition : avec négatifs *)
+let%test =
+  approx_vec ((-1.,2.) V.++ (3.,-4.)) (2.,-2.)
 
+(* soustraction : cas simple *)
+let%test =
+  approx_vec ((5.,7.) V.-- (2.,3.)) (3.,4.)
 
-  (* addition : cas simple *)
-  assert_vec ((1.,2.) V.++ (3.,4.)) (4.,6.);
+(* soustraction : avec négatifs *)
+let%test =
+  approx_vec ((-1.,2.) V.-- (3.,-4.)) (-4.,6.)
 
-  (* addition : avec négatifs *)
-  assert_vec ((-1.,2.) V.++ (3.,-4.)) (2.,-2.);
 
-  (* soustraction : cas simple *)
-  assert_vec ((5.,7.) V.-- (2.,3.)) (3.,4.);
+(*  Tests produit scalaire*)
 
-  (* soustraction : avec négatifs *)
-  assert_vec ((-1.,2.) V.-- (3.,-4.)) (-4.,6.);
+let%test =
+  approx ((1.,0.) V.*. (0.,1.)) 0.
 
+let%test =
+  approx ((2.,3.) V.*. (4.,5.)) 23.
 
-  (*  Tests produit scalaire*)
+(* avec négatifs *)
+let%test =
+  approx ((-2.,3.) V.*. (4.,-5.)) (-23.)
 
-  assert_float ((1.,0.) V.*. (0.,1.)) 0.;
 
-  assert_float ((2.,3.) V.*. (4.,5.)) 23.;
+(* Tests scalaire * vecteur (**) *)
 
-  (* avec négatifs *)
-  assert_float ((-2.,3.) V.*. (4.,-5.)) (-23.);
+let%test =
+  approx_vec (2. V.** (3.,4.)) (6.,8.)
 
+(* scalaire négatif *)
+let%test =
+  approx_vec ((-2.) V.** (3.,4.)) (-6.,-8.)
 
-  (* Tests scalaire * vecteur (**) *)
+(* scalaire zéro *)
+let%test =
+  approx_vec (0. V.** (3.,4.)) (0.,0.)
 
-  assert_vec (2. V.** (3.,4.)) (6.,8.);
 
-  (* scalaire négatif *)
-  assert_vec ((-2.) V.** (3.,4.)) (-6.,-8.);
+(* Tests division d'un vecteur par un float (//)*)
 
-  (* scalaire zéro *)
-  assert_vec (0. V.** (3.,4.)) (0.,0.);
+let%test =
+  approx_vec ((6.,8.) V.// 2.) (3.,4.)
 
+(* division avec négatifs *)
+let%test =
+  approx_vec ((-6.,8.) V.// 2.) (-3.,4.)
 
-  (* Tests division d'un vecteur par un float (//)*)
-  
+(*TODO*)
+(*division par 0 : à voir comment tu veux le gérer *)
 
-  assert_vec ((6.,8.) V.// 2.) (3.,4.);
 
-  (* division avec négatifs *)
-  assert_vec ((-6.,8.) V.// 2.) (-3.,4.);
+(* Tests length *)
 
+let%test =
+  approx (V.length (3.,4.)) 5.
 
-  (*TODO*)
-  (*division par 0 : à voir comment tu veux le gérer *)
+(* vecteur nul *)
+let%test =
+  approx (V.length (0.,0.)) 0.
 
+(* longueur avec négatifs : length(-3, -4) = 5 *)
+let%test =
+  approx (V.length (-3.,-4.)) 5.
 
- 
-  (* Tests length *)
 
-  assert_float (V.length (3.,4.)) 5.;
+(* Tests normalize*)
 
-  (* vecteur nul *)
-  assert_float (V.length (0.,0.)) 0.;
+let%test =
+  approx_vec (V.normalize (2.,0.)) (1.,0.)
 
-  (* longueur avec négatifs : length(-3, -4) = 5 *)
-  assert_float (V.length (-3.,-4.)) 5.;
+let%test =
+  approx_vec (V.normalize (0.,2.)) (0.,1.)
 
+let%test =
+  approx_vec (V.normalize (0.,0.)) (0.,0.)
 
-  (* Tests normalize*)
+let%test =
+  approx_vec (V.normalize (3.,4.)) (0.6, 0.8)
 
-  assert_vec (V.normalize (2.,0.)) (1.,0.);
 
-  assert_vec (V.normalize (0.,2.)) (0.,1.);
+(* Tests rotate*)
 
-  assert_vec (V.normalize (0.,0.)) (0.,0.);
+let%test =
+  approx_vec (V.rotate (3.,4.) 0.) (3.,4.)
 
-  assert_vec (V.normalize (3.,4.)) (0.6, 0.8);
+let%test =
+  approx_vec (V.rotate (1.,0.) (Float.pi /. 2.)) (0.,1.)
 
+let%test =
+  approx_vec (V.rotate (1.,0.) Float.pi) (-1.,0.)
 
-  (* Tests rotate*)
+let%test =
+  approx_vec (V.rotate (1.,0.) (2. *. Float.pi)) (1.,0.)
 
 
-  assert_vec (V.rotate (3.,4.) 0.) (3.,4.);
+(* Tests angle *)
 
-  assert_vec (V.rotate (1.,0.) (Float.pi /. 2.)) (0.,1.);
+let%test =
+  approx (V.angle (1.,0.)) 0.
 
-  assert_vec (V.rotate (1.,0.) Float.pi) (-1.,0.);
+let%test =
+  approx (V.angle (0.,1.)) (Float.pi /. 2.)
 
- 
-  assert_vec (V.rotate (1.,0.) (2. *. Float.pi)) (1.,0.);
+let%test =
+  approx (V.angle (-1.,0)) Float.pi
 
+let%test =
+  approx (V.angle (0.,-1.)) (-.Float.pi /. 2.)
 
-  (* Tests angle *)
+(* vecteur nul *)
+let%test =
+  approx (V.angle (0.,0.)) 0.
 
-  assert_float (V.angle (1.,0.)) 0.;
-  assert_float (V.angle (0.,1.)) (Float.pi /. 2.);
-  assert_float (V.angle (-1.,0)) Float.pi;
 
-  assert_float (V.angle (0.,-1.)) (-.Float.pi /. 2.);
+(* Tests project *)
 
-  (* vecteur nul *)
-  assert_float (V.angle (0.,0.)) 0.;
+(* projection sur x *)
+let%test =
+  approx_vec (V.project (3.,4.) (1.,0.)) (3.,0.)
 
+(* projection sur y *)
+let%test =
+  approx_vec (V.project (3.,4.) (0.,1.)) (0.,4.)
 
-  
-  (* Tests project *)
+let%test =
+  approx_vec (V.project (3.,4.) (2.,0.)) (3.,0.)
 
-  (* projection sur x *)
-  assert_vec (V.project (3.,4.) (1.,0.)) (3.,0.);
+let%test =
+  approx_vec (V.project (3.,4.) (0.,2.)) (0.,4.)
 
-  (* projection sur y *)
-  assert_vec (V.project (3.,4.) (0.,1.)) (0.,4.);
+(* projection sur axe nul *)
+let%test =
+  approx_vec (V.project (3.,4.) (0.,0.)) (0.,0.)
 
-  assert_vec (V.project (3.,4.) (2.,0.)) (3.,0.);
+(* projection d'un vecteur déjà sur l'axe x :*)
+let%test =
+  approx_vec (V.project (5.,0.) (1.,0.)) (5.,0.)
 
-  assert_vec (V.project (3.,4.) (0.,2.)) (0.,4.);
 
-  (* projection sur axe nul *)
-  assert_vec (V.project (3.,4.) (0.,0.)) (0.,0.);
+(*Tests symetric *)
 
-  (* projection d'un vecteur déjà sur l'axe x :*)
-  assert_vec (V.project (5.,0.) (1.,0.)) (5.,0.);
+(* par rapport à l'axe x *)
+let%test =
+  approx_vec (V.symetric (3.,4.) (1.,0.)) (3.,-4.)
 
+(* par rapport à l'axe y *)
+let%test =
+  approx_vec (V.symetric (3.,4.) (0.,1.)) (-3.,4.)
 
-  (*Tests symetric *)
+let%test =
+  approx_vec (V.symetric (3.,4.) (2.,0.)) (3.,-4.)
 
-  (* par rapport à l'axe x *)
-  assert_vec (V.symetric (3.,4.) (1.,0.)) (3.,-4.);
+let%test =
+  approx_vec (V.symetric (3.,4.) (0.,2.)) (-3.,4.)
 
-  (* par rapport à l'axe y *)
-  assert_vec (V.symetric (3.,4.) (0.,1.)) (-3.,4.);
+(* axe nul *)
+let%test =
+  approx_vec (V.symetric (3.,4.) (0.,0.)) (3.,4.)
 
+let%test =
+  approx_vec (V.symetric (5.,0.) (1.,0.)) (5.,0.)
 
-  assert_vec (V.symetric (3.,4.) (2.,0.)) (3.,-4.);
-  assert_vec (V.symetric (3.,4.) (0.,2.)) (-3.,4.);
 
-  (* axe nul *)
-  assert_vec (V.symetric (3.,4.) (0.,0.)) (3.,4.);
+(* Tests ortho*)
 
-  assert_vec (V.symetric (5.,0.) (1.,0.)) (5.,0.);
+let%test =
+  approx_vec (V.ortho (3.,4.)) (-4.,3.)
 
+(* cas simple *)
+let%test =
+  approx_vec (V.ortho (1.,0.)) (0.,1.)
 
-
-  (* Tests ortho*)
-
-
-  assert_vec (V.ortho (3.,4.)) (-4.,3.);
-
-  (* cas simple *)
-  assert_vec (V.ortho (1.,0.)) (0.,1.);
-
-  (* vecteur nul *)
-  assert_vec (V.ortho (0.,0.)) (0.,0.);
-
-
-  print_endline " Vector test OK";
+(* vecteur nul *)
+let%test =
+  approx_vec (V.ortho (0.,0.)) (0.,0.)
