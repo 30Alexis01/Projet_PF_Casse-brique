@@ -51,3 +51,10 @@ sig
 	 * equivalent à rotate vec PI/2 *)
 	val ortho : t -> t
 end
+
+(*TODO : j'ai juste ajouter ça pour pas avoir du rouge dans tous mes tests lol*)
+module VectorImpl : Vector = 
+struct
+  type t = float * float
+  let ( ++ ) (x1,y1) (x2,y2) = (x1 +. x2, y1 +. y2)
+end
