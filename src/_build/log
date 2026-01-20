@@ -1,0 +1,6 @@
+# dune init test test
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /home/chloe/.cache/dune/db
+# Workspace root: "/home/chloe/Desktop/N7 - S7/PF/Projet_PF_Casse-brique/src"
+# Auto-detected concurrency: 8
