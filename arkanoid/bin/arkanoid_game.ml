@@ -8,12 +8,13 @@ open Physic
 
 module type Arkanoid = functor (V : Vector) (PF : Physic) ->
 sig
-  include (Game (V) (PF))
+  include GameFunctorResult with type vector = V.t
   val score : scene -> int
 end
 
 module ArkanoidGame : Arkanoid = functor (V : Vector) (PF : Physic) ->
 struct
+  type vector = V.t (* nécéssaire pour respecter la signature mais pas utile en pratique *)
   module P = PF (V)
 
   type entity = Ball | Racket | Brick of int | MapBorder of bool
