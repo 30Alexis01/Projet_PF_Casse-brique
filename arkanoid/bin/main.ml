@@ -4,6 +4,7 @@ open Arkanoid_game
 open Geometry
 open Iterator
 open Physic
+open Color
 
 module Init = struct
   let dt = 1. /. 60. (* 60 Hz *)
@@ -25,7 +26,26 @@ let graphic_format =
     (int_of_float ((2. *. Box.marge) +. Box.supx -. Box.infx))
     (int_of_float ((2. *. Box.marge) +. Box.supy -. Box.infy))
 
-let draw_object shape pos color = failwith "A DEFINIR"
+
+let print_shape shape (x,y) = match shape with
+| Geometry.Shape.Circle(r) -> Graphics.fill_circle x y r
+| Geometry.Shape.Rect(w,h) -> Graphics.fill_rect (x-w/.2.) (y-h/.2.) w h (*TODO : verifier le sens de la sortie*)
+| Geometry.Shape.Text(t,size) -> let len = t.length in Graphics.moveto (x-.len/.2.) (y-.len/.2.); Graphics.set_text_size size; Graphics.draw_string t
+
+let get_color color = match color with
+  | Color.Black -> Graphics.black
+  | Color.White -> Graphics.white
+  | Color.Red -> Graphics.red
+  | Color.Green -> Graphics.green
+  | Color.Yellow -> Graphics.yellow
+  | Color.Cyan -> Graphics.cyan
+  | Color.Magenta -> Graphics.magenta
+  
+
+let draw_object shape pos color = (*Graphics.clear_graph ();*) (*Faut clear_graph avant d'itérer*)
+              Graphics.set_color (get_color color);
+              print_shape shape pos;
+              Graphics.synchronize ()
 
 (* extrait le score courant d'un etat : *)
 let score = AG.score

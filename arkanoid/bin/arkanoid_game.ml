@@ -25,8 +25,8 @@ struct
   let draw (_, _, pool1, pool2) f =
     let wrap = fun ((shape, pos, _, _, _) : _ P.body) obj -> f shape pos
       (match obj with
-        | Ball -> Color.Blue
-        | Brick _ -> Color.Blue
+        | Ball -> Color.Cyan
+        | Brick _ -> Color.Cyan
         | Racket -> Color.Black
         | MapBorder _ -> Color.White)
     in let _ = P.iter pool1 wrap
