@@ -1,0 +1,46 @@
+# =========================
+# OCaml / Dune
+# =========================
+
+# Dune build artifacts
+_build/
+*.cm[io]
+*.o
+*.a
+*.cmi
+*.cmo
+*.cma
+*.cmx
+*.cmxa
+*.cmt
+*.cmti
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+
+# OPAM switch / local installations
+*.opam.switch
+*.opam.local
+opam-repository/
+.opam/
+
+# Editor / IDE specific
+*.swp
+*~
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Misc
+.DS_Store
+*.log
+*.tmp
+*.bak
+*.stackdump
+
+# Vim
+*.swp
+*.swo
