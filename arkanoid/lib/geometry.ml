@@ -43,7 +43,7 @@ sig
   (* Projection d'un vecteur sur un axe , si l'axe est (0;0), renvoie (0,0)*)
   val project : t -> t -> t
   
-  (* Symetrie d'un vecteur par un axe *)
+  (* Symetrie d'un vecteur par un axe, si l'axe est (0,0), lève une exception *)
   val symetric : t -> t -> t
   
   (* Vecteur orthogonal d'un vecteur, transfo (-y, x)
