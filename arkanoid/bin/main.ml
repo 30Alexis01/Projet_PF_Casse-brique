@@ -18,7 +18,7 @@ module Box = struct
   let supy = 590.
 end
 
-module AG = ArkanoidGame (VectorImpl) (ArrayBasedPhysic)
+module AG = ArkanoidGame (VectorImpl) (ArrayBasedPhysic (VectorImpl))
 
 let graphic_format =
   Format.sprintf
@@ -28,9 +28,14 @@ let graphic_format =
 
 
 let print_shape shape (x,y) = match shape with
-| Geometry.Shape.Circle(r) -> Graphics.fill_circle x y r
-| Geometry.Shape.Rect(w,h) -> Graphics.fill_rect (x-w/.2.) (y-h/.2.) w h (*TODO : verifier le sens de la sortie*)
-| Geometry.Shape.Text(t,size) -> let len = t.length in Graphics.moveto (x-.len/.2.) (y-.len/.2.); Graphics.set_text_size size; Graphics.draw_string t
+  | Geometry.Shape.Circle(r) ->
+    Graphics.fill_circle (int_of_float x) (int_of_float y) (int_of_float r)
+  | Geometry.Shape.Rect(w,h) ->
+    Graphics.fill_rect (int_of_float (x -. w /. 2.)) (int_of_float (y -. h /. 2.)) (int_of_float w) (int_of_float h)
+  | Geometry.Shape.Text(t,size) -> 
+    Graphics.moveto (int_of_float x) (int_of_float y);
+    Graphics.set_text_size (int_of_float size);
+    Graphics.draw_string t
 
 let get_color color = match color with
   | Color.Black -> Graphics.black
@@ -62,10 +67,11 @@ let draw flux_etat =
       Graphics.synchronize ();
       Unix.sleepf Init.dt;
       loop flux_etat' (score etat)
-    | _ -> assert false
   in
   Graphics.open_graph graphic_format;
   Graphics.auto_synchronize false;
   let score = loop flux_etat 0 in
   Format.printf "Score final : %d@\n" score;
   Graphics.close_graph ()
+
+let _ = draw (AG.start ())
