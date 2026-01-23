@@ -29,6 +29,9 @@ sig
   
   (* N-eme élément d'une pool *)
   val get : ('t, 'a) pool -> int -> ('t body * 'a)
+
+  (* Premier élément verifiant cond *)
+  val get_cond : ('t, 'a) pool -> ('a bool) -> (int * 't body * 'a) option
   
   (* Modifie le n-eme élément d'une pool
    * postcondition : si la pool est statique alors le body n'a pas changé*)
@@ -102,7 +105,16 @@ struct
   in aux p (T.leaf (b, e)) (get_aabb b)
   
   let get = T.get
-  
+
+  let get_cond p cond = let rec aux st i =
+    match st with
+      | T.Empty -> None
+      | T.Leaf (b, e) -> if cond e then Some (i, b, e) else None
+      | T.Node (_, _, st1, st2) -> 
+        (match aux st1 i with
+          | Some x -> Some x
+          | None -> aux st2 (i + match st1 with T.Node (k, _, _, _) -> k | _ -> 1))
+    
   let set = T.set
   
   let pop = T.pop
