@@ -18,6 +18,7 @@ struct
   module P = P
 
   type entity = Ball | Racket | Brick of int | MapBorder of bool
+  (* Scene : nb balle, score, pool dyna (balle+raquete), pool stat (brick+wall) *)
   type scene = (int * int * (P.dyna, entity) P.pool * (P.stat, entity) P.pool)
 
   let init_scene = let stat_pool = List.fold_left
@@ -43,9 +44,9 @@ struct
   in (5, 0, dyna_pool, stat_pool)
 
 
-  let update (pv, score, pool1, pool2) = (pv, score, pool1, pool2)
+  let update (pv, score, pool1, pool2) (mous_pos, mouss_click) dt  = (pv, score, pool1, pool2)
 
-  let start () = Flux.unfold (fun s -> let s' = update s in Some ((s', s'))) init_scene
+  let start inputs dt = Flux.unfold (fun s -> let s' = update s (F.uncons inputs) dt in Some ((s', s'))) init_scene
 
   let draw (_, _, pool1, pool2) f =
     let wrap = fun ((shape, pos, _, _, _) : _ P.body) obj -> f shape pos
