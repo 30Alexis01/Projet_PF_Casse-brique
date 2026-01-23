@@ -44,7 +44,29 @@ struct
   in (5, 0, dyna_pool, stat_pool)
 
 
-  let update (pv, score, pool1, pool2) (mous_pos, mouss_click) dt  = (pv, score, pool1, pool2)
+  let update (pv, score, pool1, pool2) (mous_pos, mous_click) dt  = (*updates puis update ou est la raquette*)
+    let newDynaPool, indexDynaList, collisionDynaList, indexStaticList, collisionStaticList = Physic.update pool1 pool2 dt
+    in
+      let (newPV, newScore, newDynaPool_collisions, newStaticPool ) = List.fold_left (updateFromCollisions (pv,score,newDynaPool,pool2)) (pv, score, newDynaPool, pool2) (List.combine collisionStaticList, indexStaticList)
+      in 
+        let newDynaPool_moved_racket = updateRacket newDynaPool_collisions mous_pos
+        in
+          if mous_click && (P.get_cond) dynaPool (fun e -> e = entity.Ball) = None then (newPV, newScore, P.add newDynaPool_moved_racket (*new ball ?*),newStaticPool)
+          else (newPV,newScore,newDynaPool_moved_racket,newStaticPool)
+
+  let updateFromCollisions (pvAcc, scoreAcc, dynaPool, staticPool) (collisonElt,collisionIndex) = match collisonElt with
+  |MapBorder(true) -> (match P.get_cond dynaPool (fun e -> e = entity.Ball) with
+                      |None -> failwith "Erreur : pas de balle"
+                      |Some(ballIndex) -> (pvAcc-1,scoreAcc,P.pop dynaPool ballIndex,staticPool)
+                      )
+  |MapBorder(false) -> (pvAcc, scoreAcc, dynaPool, staticPool)
+  |Brick(brickHP) -> let newScore,newStaticPool = if brickHP = 1 then (scoreAcc+100,P.pop staticPool collisionIndex)
+                    else (scoreAcc,P.set staticPool collisionIndex (let (body, _) = P.get staticPool collisionIndex in P.set staticPool collisionIndex (body, Brick (brickHP - 1))))
+                    in  (pv,newScore,dynaPool,newStaticPool)
+
+  let updateRacket dynaPool mous_pos = let racketIdx = P.get_cond dynaPool (fun e -> e = entity.Racket)
+                  in P.set dynaPool racketIdx  (*TODO : avoir des const racket width et length ? + ajouter la pos*)
+
 
   let start inputs dt = Flux.unfold (fun s -> let s' = update s (F.uncons inputs) dt in Some ((s', s'))) init_scene
 
