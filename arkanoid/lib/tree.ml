@@ -24,9 +24,6 @@ sig
   (* Retire la n-eme feuille en parcours infixe, supprime aussi le noeud parent et le remplace par le sa restant *)
   val pop : ('a, 'b) t -> int -> ('a, 'b) t
 
-  val map : ('a, 'b) t -> ('a -> 'a) -> ('a, 'b) t
-  val map_i : ('a, 'b) t -> ('a -> int -> 'a) -> ('a, 'b) t
-
   (* Parcours infixe des feuilles et appelle f sur chacune *)
   val iter : ('a, 'b) t -> ('a -> unit) -> unit
 
@@ -43,7 +40,7 @@ struct
     | Node of (int * 'b * ('a, 'b) t * ('a, 'b) t)
     | Leaf of 'a
 
-  let rec nb_leaves t  =
+  let nb_leaves t  =
     match t with
     | Empty -> 0
     | Leaf _ -> 1

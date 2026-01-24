@@ -31,7 +31,7 @@ sig
   val get : ('t, 'a) pool -> int -> ('t body * 'a)
 
   (* Premier élément verifiant cond *)
-  val get_cond : ('t, 'a) pool -> ('a bool) -> (int * 't body * 'a) option
+  val get_cond : ('t, 'a) pool -> ('a -> bool) -> (int * 't body * 'a) option
   
   (* Modifie le n-eme élément d'une pool
    * postcondition : si la pool est statique alors le body n'a pas changé*)
@@ -72,7 +72,7 @@ struct
     | _ -> ((0.,0.), (0.,0.))
 
   let union (v11, v21) (v12, v22) =
-    match ((v11, v21), (v12, v21)) with
+    match ((v11, v21), (v12, v22)) with
     | (((0.,0.), (0.,0.)), (v1, v2)) -> (v1, v2)
     | ((v1, v2), ((0.,0.), (0.,0.))) -> (v1, v2)
     | (((x11, y11), (x21, y21)), ((x12, y12), (x22, y22))) -> 
@@ -114,6 +114,7 @@ struct
         (match aux st1 i with
           | Some x -> Some x
           | None -> aux st2 (i + match st1 with T.Node (k, _, _, _) -> k | _ -> 1))
+  in aux p 0
     
   let set = T.set
   

@@ -18,7 +18,7 @@ module Box = struct
   let supy = 590.
 end
 
-module AG = ArkanoidGame (VectorImpl) (ArrayBasedPhysic (VectorImpl))
+module AG = ArkanoidGame (VectorImpl) (TreeBasedPhysic (VectorImpl))
 
 let graphic_format =
   Format.sprintf
