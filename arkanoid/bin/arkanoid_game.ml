@@ -44,34 +44,37 @@ struct
   in (5, 0, dyna_pool, stat_pool)
 
 
-  let update (pv, score, pool1, pool2) (mous_pos, mous_click) dt  = (*updates puis update ou est la raquette*)
-    let newDynaPool, indexDynaList, collisionDynaList, indexStaticList, collisionStaticList = P.update pool1 pool2 dt
-    in
-      let (newPV, newScore, newDynaPool_collisions, newStaticPool ) = List.fold_left (updateFromCollisions (pv,score,newDynaPool,pool2)) (pv, score, newDynaPool, pool2) (List.combine collisionStaticList, indexStaticList)
-      in 
-        let newDynaPool_moved_racket = updateRacket newDynaPool_collisions mous_pos
-        in
-          if mous_click && P.get_cond newDynaPool_moved_racket is_ball = None then (newPV, newScore, P.add newDynaPool_moved_racket (*new ball ?*),newStaticPool)
-          else (newPV,newScore,newDynaPool_moved_racket,newStaticPool)
-
   let is_ball e = match e with Ball -> true | _ -> false
   let is_racket e = match e with Racket -> true | _ -> false
 
   let updateFromCollisions (pvAcc, scoreAcc, dynaPool, staticPool) (collisonElt,collisionIndex) = match collisonElt with
   |MapBorder(true) -> (match P.get_cond dynaPool is_ball with
                       |None -> failwith "Erreur : pas de balle"
-                      |Some(ballIndex) -> (pvAcc-1,scoreAcc,P.pop dynaPool ballIndex,staticPool)
+                      |Some(ballIndex,_,_) -> (pvAcc-1,scoreAcc,P.pop dynaPool ballIndex,staticPool)
                       )
   |MapBorder(false) -> (pvAcc, scoreAcc, dynaPool, staticPool)
-  |Brick(brickHP) -> let newScore,newStaticPool = if brickHP = 1 then (scoreAcc+100,P.pop staticPool collisionIndex)
-                    else (scoreAcc,P.set staticPool collisionIndex (let (body, _) = P.get staticPool collisionIndex in P.set staticPool collisionIndex (body, Brick (brickHP - 1))))
-                    in  (pv,newScore,dynaPool,newStaticPool)
+  |Brick(brickHP) -> let newScore,newStaticPool = (if brickHP = 1 then (scoreAcc+100,P.pop staticPool collisionIndex)
+                    else (scoreAcc,(let (body, _) = P.get staticPool collisionIndex in P.set staticPool collisionIndex (body, Brick (brickHP - 1)))))
+                    in  (pvAcc,newScore,dynaPool,newStaticPool)
+  | _ -> failwith "Erreur : une pool statique ne doit contenir que des briques ou des murs"
 
   let updateRacket dynaPool mous_pos =
     match P.get_cond dynaPool is_racket with
-      | None -> failwith "a plus raquete ???"
-      | Some (racketIdx, (rack_shape, (_, rack_y), _, _, _), _) -> P.set dynaPool racketIdx (P.dyna_body rack_shape (* TODO *))
+      | None -> failwith "Pas de raquette dans la pool"
+      | Some (racketIdx, (rack_shape, (_, rack_y), _, _, _), _) -> P.set dynaPool racketIdx (P.dyna_body rack_shape (45., mous_pos) (0., 0.) (0., 0.) false, Racket)
 
+
+  let update (pv, score, pool1, pool2) (mous_pos, mous_click) dt  = (*updates puis update ou est la raquette*)
+    if pv = 0 then None else
+    let newDynaPool, indexDynaList, collisionDynaList, indexStaticList, collisionStaticList = P.update pool1 pool2 dt
+    in
+      let (newPV, newScore, newDynaPool_collisions, newStaticPool ) = List.fold_left (updateFromCollisions) (pv, score, newDynaPool, pool2) (List.combine collisionStaticList indexStaticList)
+      in 
+        let newDynaPool_moved_racket = updateRacket newDynaPool_collisions mous_pos
+        in
+          if mous_click && P.get_cond newDynaPool_moved_racket is_ball = None
+          then Some((newPV, newScore, (P.add newDynaPool_moved_racket (P.dyna_body (Shape.Circle 3.) (45., 70.) (0., -10.) (0., 8.) true) Ball),newStaticPool)) (* J'ai du enelever la virgule entre le dyna_body et le Ball pour que ça compile*)
+          else Some((newPV,newScore,newDynaPool_moved_racket,newStaticPool))
 
   let start inputs dt = Flux.unfold (fun s -> match update s (F.uncons inputs) dt with None -> None | Some (s') -> Some (s', s')) init_scene
 
