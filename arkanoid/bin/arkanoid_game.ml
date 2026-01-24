@@ -21,33 +21,33 @@ struct
   (* Scene : nb balle, score, pool dyna (balle+raquete), pool stat (brick+wall) *)
   type scene = (int * int * (P.dyna, entity) P.pool * (P.stat, entity) P.pool)
 
-  let ballBody = P.dyna_body (Shape.Circle 5.) (250., 70.) (0., 150.) (0., -20.) true
+  let ballBody = P.dyna_body (Shape.Circle 8.) (250., 70.) (0., 150.) (0., -20.) true
 
   let init_scene = let stat_pool = List.fold_left
     (fun pool (body, obj) -> P.add pool body obj)
     P.empty_stat_pool
     [
-      (P.stat_body (Shape.Rect (20., 12.)) (100., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (150., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (200., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (250., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (300., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (350., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (400., 400.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (100., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (150., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (200., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (250., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (300., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (350., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (400., 350.), Brick 2);
-      (P.stat_body (Shape.Rect (20., 12.)) (100., 300.), Brick 1);
-      (P.stat_body (Shape.Rect (20., 12.)) (150., 300.), Brick 1);
-      (P.stat_body (Shape.Rect (20., 12.)) (200., 300.), Brick 1);
-      (P.stat_body (Shape.Rect (20., 12.)) (250., 300.), Brick 1);
-      (P.stat_body (Shape.Rect (20., 12.)) (300., 300.), Brick 1);
-      (P.stat_body (Shape.Rect (20., 12.)) (350., 300.), Brick 1);
-      (P.stat_body (Shape.Rect (20., 12.)) (400., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (100., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (150., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (200., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (250., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (300., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (350., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (400., 400.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (100., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (150., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (200., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (250., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (300., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (350., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (400., 350.), Brick 2);
+      (P.stat_body (Shape.Rect (25., 15.)) (100., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (150., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (200., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (250., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (300., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (350., 300.), Brick 1);
+      (P.stat_body (Shape.Rect (25., 15.)) (400., 300.), Brick 1);
       (P.stat_body (Shape.Rect (1500., 500.)) (250., -250.), MapBorder true);
       (P.stat_body (Shape.Rect (500., 500.)) (-250., 250.), MapBorder false);
       (P.stat_body (Shape.Rect (500., 500.)) (750., 250.), MapBorder false);
@@ -57,7 +57,7 @@ struct
     (fun pool (body, obj) -> P.add pool body obj)
     P.empty_dyna_pool
     [
-      (P.dyna_body (Shape.Rect (50., 2.)) (45., 50.) (0., 0.) (0., 0.) false, Racket);
+      (P.dyna_body (Shape.Rect (25., 15.)) (45., 50.) (0., 0.) (0., 0.) false, Racket);
       (ballBody, Ball)
     ]
   in (5, 0, dyna_pool, stat_pool)
