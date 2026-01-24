@@ -166,34 +166,37 @@ struct
       | _ -> (0., 0.)
 
   let update_body dp sp dt ((s, pos, vit, acc, bounce), e) i =
-    let rec get_collision_list p b bb i vit =
+    let rec get_collision_list p b bb i j vit =
       match p with
         | T.Empty -> ([], vit)
-        | T.Leaf (b', e) -> let n = collide b b' in
-          if V.(n **. vit) < 0. then
-            ([(i, e)], if bounce then V.(symetric vit (ortho n)) else (0., 0.))
-          else
-            ([], vit)
+        | T.Leaf (b', e) -> 
+          if i = j then ([], vit) else
+          let n = collide b b' in
+            if V.(n **. vit) < 0. then
+              ([(j, e)], if bounce then V.(symetric vit (ortho n)) else (0., 0.))
+            else
+              ([], vit)
         | T.Node (_, bb', st1, st2) ->
           if overlap bb bb' then
-            let (l1, vit1) = get_collision_list st1 b bb i vit in
-            let (l2, vit2) = (get_collision_list st2 b bb
-              (i + match st1 with T.Node (k, _, _, _) -> k | _ -> 1) vit1) in
+            let (l1, vit1) = get_collision_list st1 b bb i j vit in
+            let (l2, vit2) = (get_collision_list st2 b bb i
+              (j + match st1 with T.Node (k, _, _, _) -> k | _ -> 1) vit1) in
             (l1 @ l2, vit2)
           else
             ([], vit)
     in
       let b = V.((s, pos ++ dt *** vit, vit ++ dt *** acc, acc, bounce)) in
       let bb = get_aabb b in
-      let (l1, vit1) = get_collision_list dp b bb 0 vit in
-      let (l2, vit2) = get_collision_list sp b bb 0 vit1 in
+      let (l2, vit2) = get_collision_list sp b bb (-1) 0 vit in
+      let (l1, vit1) = get_collision_list dp b bb i 0 vit2 in
+
         match (l1, l2) with
           | [], [] -> (b, [], [])
-          | _, stat_col -> ((s, pos, vit2, acc, bounce), [(i, e)], stat_col)
+          | _, stat_col -> ((s, pos, vit1, acc, bounce), [(i, e)], stat_col)
 
   let update dp sp dt =
-    let rec aux dp i =
-      match dp with
+    let rec aux st i =
+      match st with
         | T.Empty -> (T.empty, [], [])
         | T.Leaf (b,e) -> let (b', cd, cs) = update_body dp sp dt (b,e) i in (T.leaf (b',e), cd, cs)
         | T.Node (_, _, st1, st2) ->

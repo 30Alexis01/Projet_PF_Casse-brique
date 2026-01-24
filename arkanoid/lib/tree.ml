@@ -32,7 +32,7 @@ sig
   val iter_cond_i : ('a, 'b) t -> ('a -> int -> unit) -> ('b -> bool) -> unit
 end
 
-module Tree : Tree =
+module TreeImpl : Tree =
 struct
   type ('a, 'b) t =
     | Empty

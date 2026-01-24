@@ -12,7 +12,7 @@ sig
   type entity
 
   (* Création d'une nouvelle scene *)
-  val start : unit -> scene Flux.t
+  val start : (float * bool) flux -> float -> scene Flux.t
 
   (* Itere sur tous les objets graphique de la scene et appelle une fonction d'affichage *)
   val draw : scene -> (Shape.t -> V.t -> Color.t -> unit) -> unit

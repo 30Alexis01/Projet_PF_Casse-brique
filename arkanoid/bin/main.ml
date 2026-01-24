@@ -3,8 +3,10 @@ open Lib_arkanoid
 open Arkanoid_game
 open Geometry
 open Iterator
+open Input
 open Physic
 open Color
+open Tree
 
 module Init = struct
   let dt = 1. /. 60. (* 60 Hz *)
@@ -18,7 +20,7 @@ module Box = struct
   let supy = 590.
 end
 
-module AG = ArkanoidGame (VectorImpl) (TreeBasedPhysic (VectorImpl))
+module AG = ArkanoidGame (VectorImpl) (TreeBasedPhysic (VectorImpl) (TreeImpl))
 
 let graphic_format =
   Format.sprintf
@@ -65,7 +67,7 @@ let draw flux_etat =
       AG.draw etat draw_object;
       (* FIN DESSIN ETAT *)
       Graphics.synchronize ();
-      Unix.sleepf Init.dt;
+      Unix.sleepf (Init.dt);
       loop flux_etat' (score etat)
   in
   Graphics.open_graph graphic_format;
