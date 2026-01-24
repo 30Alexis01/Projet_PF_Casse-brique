@@ -67,11 +67,13 @@ struct
                     else (scoreAcc,P.set staticPool collisionIndex (let (body, _) = P.get staticPool collisionIndex in P.set staticPool collisionIndex (body, Brick (brickHP - 1))))
                     in  (pv,newScore,dynaPool,newStaticPool)
 
-  let updateRacket dynaPool mous_pos = let racketIdx = P.get_cond dynaPool is_racket
-                  in P.set dynaPool racketIdx  (*TODO : avoir des const racket width et length ? + ajouter la pos*)
+  let updateRacket dynaPool mous_pos =
+    match P.get_cond dynaPool is_racket with
+      | None -> failwith "a plus raquete ???"
+      | Some (racketIdx, (rack_shape, (_, rack_y), _, _, _), _) -> P.set dynaPool racketIdx (P.dyna_body rack_shape (* TODO *))
 
 
-  let start inputs dt = Flux.unfold (fun s -> let s' = update s (F.uncons inputs) dt in Some ((s', s'))) init_scene
+  let start inputs dt = Flux.unfold (fun s -> match update s (F.uncons inputs) dt with None -> None | Some (s') -> Some (s', s')) init_scene
 
   let draw (_, _, pool1, pool2) f =
     let wrap = fun ((shape, pos, _, _, _) : _ P.body) obj -> f shape pos

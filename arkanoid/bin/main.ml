@@ -74,4 +74,4 @@ let draw flux_etat =
   Format.printf "Score final : %d@\n" score;
   Graphics.close_graph ()
 
-let _ = draw (AG.start ())
+let _ = draw (AG.start mouse Init.dt)
