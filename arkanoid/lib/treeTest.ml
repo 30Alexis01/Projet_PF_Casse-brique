@@ -3,7 +3,7 @@ module T = Tree
 
 let t0 = T.leaf "A"
 
-(* add sur une feuille : on remplace A par un noeud (A,B) *)
+(* add  *)
 let t1 = T.add t0 0 ("B", 0) 1
 
 let expected_t1 =
@@ -12,10 +12,6 @@ let expected_t1 =
 let%test _ =
   t1 = expected_t1
 
-
-(* ===== add en chaîne ===== *)
-
-(* A,B,C : on remplace la feuille 1 (B) par (B,C) *)
 let t2 = T.add t1 1 ("C", 0) 2
 
 let expected_t2 =
