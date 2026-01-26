@@ -49,10 +49,8 @@ let get_color color = match color with
   | Color.Magenta -> Graphics.magenta
   
 
-let draw_object shape pos color = (*Graphics.clear_graph ();*) (*Faut clear_graph avant d'itérer*)
-              Graphics.set_color (get_color color);
-              print_shape shape pos;
-              Graphics.synchronize ()
+let draw_object shape pos color = Graphics.set_color (get_color color);
+  print_shape shape pos; ()
 
 (* extrait le score courant d'un etat : *)
 let score = AG.score

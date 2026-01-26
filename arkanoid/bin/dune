@@ -1,4 +1,4 @@
 (executable
  (public_name arkanoid)
- (name main)
+ (name newtonoid)
  (libraries lib_arkanoid))
