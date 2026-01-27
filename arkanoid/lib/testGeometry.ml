@@ -66,7 +66,7 @@ let%test _ =
 let%test _ =
   approx_vec (VectorImpl.(//) (-6.,8.) 2.) (-3.,4.)
 
-(* division par 0 : à définir *) (*Lance une exception*)
+(* division par 0 : Lance une exception*)
 
 
 (* Tests length *)
@@ -176,7 +176,7 @@ let%test _ =
   let%test _ =
   approx_vec (VectorImpl.symetric (-3.,-4.) (0.,2.)) (3.,-4.)
 
-(* axe nul *) (*lève une exception*)
+(* axe nul : lève une exception*)
 (*let%test _ =
   approx_vec (VectorImpl.symetric (3.,4.) (0.,0.)) (3.,4.)*)
 

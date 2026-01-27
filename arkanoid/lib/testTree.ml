@@ -112,8 +112,6 @@ let t_cond =
 (* cond : b > 0,  on coupe le sous-arbre gauche (b=0) et on garde le sous-arbre droit *)
 let cond b = b > 0
 
-(* Pour tester iter_cond / iter_cond_i sans helper, on accumule directement dans une ref
-   (c'est pas une fonction helper, c'est juste la manière de récupérer ce qui a été visité) *)
 
 let%test _ =
   let acc = ref [] in

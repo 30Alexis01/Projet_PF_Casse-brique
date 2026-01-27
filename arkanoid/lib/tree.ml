@@ -21,7 +21,7 @@ sig
   (* Modifie la n-eme feuille en parcours infixe *)
   val set : ('a, 'b) t -> int -> 'a -> ('a, 'b) t
 
-  (* Retire la n-eme feuille en parcours infixe, supprime aussi le noeud parent et le remplace par le sa restant *)
+  (* Retire la n-eme feuille en parcours infixe, supprime aussi le noeud parent et le remplace par la feuille restante restant *)
   val pop : ('a, 'b) t -> int -> ('a, 'b) t
 
   (* Parcours infixe des feuilles et appelle f sur chacune *)
